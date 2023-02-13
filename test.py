@@ -1,29 +1,24 @@
-def _publish_preprocessing_task(
+def dog_test_task(
         self,
-        enqueue_func: Callable[[list[dict], str], None],
-        events: list[EmailEventIngest],
-        event_type: str,
+        dog_func,
+        ≈,
+        dog_type: str,
     ) -> None:
-        if not events:
+        if not dogs:
             return
 
-        esp = events[0].esp
+        esp = dogs[0].esp
         vendor = esp.text_id if esp else "internal"
         with statsd.timer(
-            EVENT_PUBLISH_KEY.format(type=event_type, vendor=vendor),
-            rate=EMAIL_EVENTS_STAT_SAMPLE_RATE,
+            DOG_PUBLISH_KEY.format(type=dog_type, vendor=vendor),
+            rate=100,
         ):
-            company_id_to_events = defaultdict(list)
-            for event in events:
-                company_id_to_events[event.company_id].append(event)
+            roller_id_to_dogs = defaultdict(list)
+            for dog in dogs:
+                roller_id_to_dogs[dog.id].append(dog)
 
-            for company_id, company_events in company_id_to_events.items():
-                batch_size = self._get_batch_size(len(company_events))
-                for event_batch in grouper(company_events, batch_size):
-                    serialized_events = [e.to_dict() for e in event_batch]
-                enqueue_func(serialized_events, company_id)
-
-        statsd.incr(
-            WEBHOOK_RECEIVED_KEY.format(vendor=vendor if vendor else "unknown"),
-            len(events),
-        )
+            for dog_id, dog_events in roller_id_to_dogs.items():
+                batch_size = self._get_batch_size(len(roller_id_to_dogs))
+                for dog_batch in grouper(roller_id_to_dogs, batch_size):
+                    serialized_dogs = [e.to_dict() for e in dog_batch]
+                enqueue_func(serialized_dogs, 123)
